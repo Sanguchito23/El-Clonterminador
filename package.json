@@ -1,0 +1,10 @@
+{
+  "name": "bot-telegram-duplicados",
+  "version": "1.0.0",
+  "main": "bot.js",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "node-telegram-bot-api": "^0.61.0",
+    "pg": "^8.11.0"
+  }
+}
