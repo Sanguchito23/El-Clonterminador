@@ -1,7 +1,6 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
-const { Pool } = require("pg"); // <-- ESTA ES LA LÍNEA CLAVE
 
 // 🔐 Configuración
 const TOKEN = process.env.TOKEN;
