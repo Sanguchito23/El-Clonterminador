@@ -152,4 +152,18 @@ bot.onText(/\/donar/, (msg) => {
   bot.sendMessage(msg.chat.id, mensaje, { parse_mode: "HTML" });
 });
 
-console.log("✅ Bot iniciado correctamente (Postgres Mode).");
+// 🌐 TRUCO PARA RENDER (WEB SERVICE GRATUITO)
+// Creamos un pequeño servidor web solo para que Render detecte el puerto
+// y no cierre el servicio por inactividad.
+const PORT = process.env.PORT || 3000;
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  // Si alguien entra a la web de tu bot, responderá esto:
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('El bot está funcionando correctamente.');
+});
+
+server.listen(PORT, () => {
+  console.log(`🌐 Servidor web escuchando en el puerto ${PORT} (Solo para Render)`);
+});
