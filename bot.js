@@ -7,14 +7,15 @@ const fs = require("fs");
 // 🔐 Configuración
 const TOKEN = process.env.TOKEN;
 // Si no hay token, lanza error y DETIENE el bot antes de intentar conectar
-if (!TOKEN) throw new Error("ERROR: No se encontró la variable TOKEN en el archivo .env");
+if (!TOKEN)
+  throw new Error("ERROR: No se encontró la variable TOKEN en el archivo .env");
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 // 🗄️ Base de datos SQLite (Para uso local en PC)
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, "data");
 if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
 const dbPath = path.join(DATA_DIR, "bot_duplicados.db");
@@ -48,16 +49,16 @@ const countFilesStmt = db.prepare(
 // 📋 Comando /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
-  const welcomeMsg = `👋 Anti-Duplicate Bot
+  const welcomeMsg = `👋 <b>Hi! I'm your chat guardian.</b>
 
-🛡️ Running with a local database.
+My mission is to ensure you never see the same file twice. If I spot a duplicate, I'll delete it instantly!
 
-📄 Comandos:
-/status - Shows unique files
-/clean - Clears memory 
+📄 <b>Available Commands:</b>
+/status - Shows unique files saved
+/clean - Clears my memory 
 /info - Support the project`;
 
-  bot.sendMessage(chatId, welcomeMsg);
+  bot.sendMessage(chatId, welcomeMsg, { parse_mode: "HTML" });
 });
 
 // 📥 Manejador principal
@@ -82,11 +83,18 @@ bot.on("message", async (msg) => {
       // 🔥 DUPLICADO
       try {
         if (!isGroup) {
-          await bot.sendMessage(chatId, "🔁 Este archivo ya fue enviado anteriormente.");
+          await bot.sendMessage(
+            chatId,
+            "🔁 Este archivo ya fue enviado anteriormente.",
+          );
         }
         await bot.deleteMessage(chatId, msg.message_id);
       } catch (err) {
-        if (!isGroup) await bot.sendMessage(chatId, "⚠️ Duplicado detectado, sin permisos para borrar.");
+        if (!isGroup)
+          await bot.sendMessage(
+            chatId,
+            "⚠️ Duplicado detectado, sin permisos para borrar.",
+          );
       }
     } else {
       // ✅ NUEVO
@@ -98,10 +106,13 @@ bot.on("message", async (msg) => {
         username,
         Date.now(),
       );
-      
+
       console.log(`[Nuevo] Chat: ${chatId}`);
       if (!isGroup) {
-        await bot.sendMessage(chatId, "✅ Archivo recibido y registrado correctamente.");
+        await bot.sendMessage(
+          chatId,
+          "✅ Archivo recibido y registrado correctamente.",
+        );
       }
     }
   } catch (err) {
@@ -134,7 +145,11 @@ bot.onText(/\/limpiar/, async (msg) => {
 // 💰 /info y /donar
 const donarMsg = `<b>💖 If you’d like to help support and maintain the bot, you can make a donation here:</b>\n\n👉 Donation address: 0x14e71d490ce4b4952b88da683602024e37ddec07 (BSC - BEP20 network)."`;
 
-bot.onText(/\/info/, (msg) => bot.sendMessage(msg.chat.id, donarMsg, { parse_mode: "HTML" }));
-bot.onText(/\/donar/, (msg) => bot.sendMessage(msg.chat.id, donarMsg, { parse_mode: "HTML" }));
+bot.onText(/\/info/, (msg) =>
+  bot.sendMessage(msg.chat.id, donarMsg, { parse_mode: "HTML" }),
+);
+bot.onText(/\/donar/, (msg) =>
+  bot.sendMessage(msg.chat.id, donarMsg, { parse_mode: "HTML" }),
+);
 
 console.log("✅ Bot iniciado correctamente (Modo Local SQLite).");
