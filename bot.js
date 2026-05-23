@@ -47,7 +47,7 @@ My mission is to ensure you never see the same file twice. If I spot a duplicate
 
 📄 <b>Available Commands:</b>
 /status - Shows unique files saved
-/clean - Clears my memory (Admins only)
+/clean - Clears my memory 
 /info - Support the project`;
 
   bot.sendMessage(chatId, welcomeMsg, { parse_mode: "HTML" });
